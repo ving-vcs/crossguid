@@ -122,10 +122,10 @@ else()
 endif()
 
 set_target_properties(crossguid
-					  PROPERTIES
-					  VERSION ${PROJECT_VERSION}
-					  SOVERSION ${PROJECT_VERSION_MAJOR}
-					  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+		      PROPERTIES
+		      VERSION ${PROJECT_VERSION}
+		      SOVERSION ${PROJECT_VERSION_MAJOR}
+		      DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 if(CROSSGUID_INSTALL)
     include(GNUInstallDirs)
