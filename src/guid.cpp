@@ -25,6 +25,7 @@
 #include "crossguid/guid.hpp"
 
 #include <cctype>
+#include <cstdint>
 #include <cstring>
 #include <iomanip>
 #include <iostream>
