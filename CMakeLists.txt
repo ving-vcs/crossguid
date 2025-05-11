@@ -10,6 +10,15 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     set(MASTER_PROJECT ON)
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_DEBUG_POSTFIX "-dgb")
+
+# Set the build type if not set
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
+
 option(CROSSGUID_TESTS "Build tests" ${MASTER_PROJECT})
 option(CROSSGUID_EXAMPLES "Build examples" ${MASTER_PROJECT})
 option(CROSSGUID_INSTALL "Generate install target" ${MASTER_PROJECT})
@@ -112,9 +121,11 @@ else()
     target_compile_definitions(crossguid PRIVATE GUID_LIBUUID)
 endif()
 
-set_target_properties(crossguid PROPERTIES
-    VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR})
+set_target_properties(crossguid
+					  PROPERTIES
+					  VERSION ${PROJECT_VERSION}
+					  SOVERSION ${PROJECT_VERSION_MAJOR}
+					  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 if(CROSSGUID_INSTALL)
     include(GNUInstallDirs)
@@ -139,14 +150,17 @@ if(CROSSGUID_INSTALL)
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	    DESTINATION ${CROSSGUID_INC_INSTALL_DIR})
 
-    # Make cmake config files for all targets
-    install(EXPORT  crossguidTargets
-	    DESTINATION ${CROSSGUID_CMAKE_CONFIG_INSTALL_DIR}
-	    FILE crossguid-config.cmake)
+	# Make cmake config files for all targets
+	install(EXPORT  crossguidTargets
+		DESTINATION ${CROSSGUID_CMAKE_CONFIG_INSTALL_DIR}
+		FILE crossguid-config.cmake)
 
-    # Install readme and license
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE" "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-	    DESTINATION ${CROSSGUID_ADDITIONAL_FILES_INSTALL_DIR})
+	# Install readme and license
+	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE" "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+		DESTINATION ${CROSSGUID_ADDITIONAL_FILES_INSTALL_DIR})
+
+	configure_file(crossguid.pc.in ${PROJECT_BINARY_DIR}/crossguid.pc @ONLY)
+	install(FILES ${PROJECT_BINARY_DIR}/crossguid.pc DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig)
 endif()
 
 if (CROSSGUID_TESTS)
